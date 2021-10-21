@@ -60,10 +60,8 @@ namespace TechJobsPersistent.Controllers
         [HttpGet]
         public IActionResult About(int id)
         {
-            ViewBag.selectedEmployer = context.Employers.Find(id);
-            ViewBag.name = ViewBag.selectedEmployer.Name;
-            ViewBag.location = ViewBag.selectedEmployer.Location;
-            return View();
+            Employer theEmployer = context.Employers.Find(id);
+            return View(theEmployer);
         }
     }
 }
