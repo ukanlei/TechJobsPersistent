@@ -33,24 +33,35 @@ namespace TechJobsPersistent.Controllers
         public IActionResult AddJob()
         {
             List<Employer> employers = context.Employers.ToList();
-            AddJobViewModel addJobViewModel = new AddJobViewModel(employers);
+            List<Skill> skills = context.Skills.ToList();
+            AddJobViewModel addJobViewModel = new AddJobViewModel(employers, skills);
             return View(addJobViewModel);
         }
 
         [HttpPost("/Add")]
-        public IActionResult ProcessAddJobForm(AddJobViewModel addJobViewModel)  
+        public IActionResult ProcessAddJobForm(AddJobViewModel addJobViewModel, string[] selectedSkills)  
         {
             if (ModelState.IsValid)
             {
                 Employer theEmployer = context.Employers.Find(addJobViewModel.EmployerId);
                 Job newJob = new Job
+
                 {
                     Name = addJobViewModel.Name,
                     EmployerId = addJobViewModel.EmployerId,
                     Employer = theEmployer 
                 };
-                context.Jobs.Add(newJob);
-                context.SaveChanges();
+
+                foreach (var skill in selectedSkills)
+                {
+                    JobSkill jobSkill = new JobSkill();
+                    jobSkill.Job = newJob; //create new Jobskill object with new Job object
+                    jobSkill.SkillId = int.Parse(skill); //parse each item in selectedSkills as an integer for SkillId
+                    context.JobSkills.Add(jobSkill); //add new JobSkill object to DbContext object
+                }
+
+                context.Jobs.Add(newJob); //add new Job object to DbContext Jobs object
+                context.SaveChanges(); //get updated info to database
                 return Redirect("Home");
             }
 
