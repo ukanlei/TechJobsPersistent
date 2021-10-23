@@ -45,7 +45,6 @@ namespace TechJobsPersistent.Controllers
             {
                 Employer theEmployer = context.Employers.Find(addJobViewModel.EmployerId);
                 Job newJob = new Job
-
                 {
                     Name = addJobViewModel.Name,
                     EmployerId = addJobViewModel.EmployerId,
@@ -63,6 +62,16 @@ namespace TechJobsPersistent.Controllers
                 context.Jobs.Add(newJob); //add new Job object to DbContext Jobs object
                 context.SaveChanges(); //get updated info to database
                 return Redirect("Home");
+            }
+
+            List<SelectListItem> Employers = new List<SelectListItem>();
+            foreach (Employer employer in context.Employers)
+            {
+                Employers.Add(new SelectListItem
+                {
+                    Value = employer.Id.ToString(),
+                    Text = employer.Name
+                });
             }
 
             return View("AddJob" ,addJobViewModel);
