@@ -10,3 +10,6 @@ WHERE Location = St. Louis City
 
 --Part 3
 
+SELECT Name, Description 
+FROM Skills
+INNER JOIN JobSkills ON JobSkills.SkillId = Skills.Id;
