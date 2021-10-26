@@ -32,9 +32,11 @@ namespace TechJobsPersistent.Controllers
         [HttpGet("/Add")]
         public IActionResult AddJob()
         {
+
             List<Employer> employers = context.Employers.ToList();
             List<Skill> skills = context.Skills.ToList();
             AddJobViewModel addJobViewModel = new AddJobViewModel(employers, skills);
+
             return View(addJobViewModel);
         }
 
@@ -48,7 +50,7 @@ namespace TechJobsPersistent.Controllers
                 {
                     Name = addJobViewModel.Name,
                     EmployerId = addJobViewModel.EmployerId,
-                    Employer = theEmployer 
+                    Employer = theEmployer
                 };
 
                 foreach (var skill in selectedSkills)
@@ -64,10 +66,20 @@ namespace TechJobsPersistent.Controllers
                 return Redirect("Home");
             }
 
-            List<SelectListItem> Employers = new List<SelectListItem>();
+            //repopulate checkbox skill option
+            addJobViewModel.Skills = new List<Skill>();
+            var skills = context.Skills;
+            foreach (Skill skill in skills)
+            {
+                addJobViewModel.Skills.Add(skill);
+
+            }
+
+                //repopulate employer dropdown list
+            addJobViewModel.Employers = new List<SelectListItem>();
             foreach (Employer employer in context.Employers)
             {
-                Employers.Add(new SelectListItem
+                addJobViewModel.Employers.Add(new SelectListItem
                 {
                     Value = employer.Id.ToString(),
                     Text = employer.Name
